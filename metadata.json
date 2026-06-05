@@ -1,0 +1,10 @@
+{
+  "uuid": "raccoonlauncher@shimafallah.github.io",
+  "name": "Raccoon Launcher",
+  "description": "A fast, keyboard-driven launcher overlay for GNOME Shell. Search and launch apps, evaluate math, run quick web searches, and trigger system actions \u2014 all from one hotkey.",
+  "shell-version": ["48", "49", "50"],
+  "url": "https://github.com/shimafallah/raccoon-launcher",
+  "settings-schema": "org.gnome.shell.extensions.raccoonlauncher",
+  "gettext-domain": "raccoonlauncher",
+  "version-name": "1.0.0"
+}
