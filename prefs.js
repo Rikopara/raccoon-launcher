@@ -4,7 +4,25 @@ import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 
-import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/prefs.js';
+// The ExtensionPreferences base module path varies across GNOME builds; try
+// the standard path first, then the js/extensions/ fallback.
+const PREFS_MODULE_PATHS = [
+    'resource:///org/gnome/Shell/Extensions/prefs.js',
+    'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js',
+];
+
+let ExtensionPreferences;
+let lastError;
+for (const path of PREFS_MODULE_PATHS) {
+    try {
+        ({ExtensionPreferences} = await import(path));
+        break;
+    } catch (e) {
+        lastError = e;
+    }
+}
+if (!ExtensionPreferences)
+    throw lastError;
 
 export default class RaccoonLauncherPrefs extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -16,6 +34,11 @@ export default class RaccoonLauncherPrefs extends ExtensionPreferences {
         const shortcutGroup = new Adw.PreferencesGroup({title: 'Shortcut'});
         page.add(shortcutGroup);
         shortcutGroup.add(new ShortcutRow(settings, 'toggle-launcher'));
+
+        // --- Appearance -------------------------------------------------
+        const appearance = new Adw.PreferencesGroup({title: 'Appearance'});
+        page.add(appearance);
+        appearance.add(new ColorRow(settings, 'box-color'));
 
         // --- Providers --------------------------------------------------
         const providers = new Adw.PreferencesGroup({title: 'Providers'});
@@ -46,6 +69,55 @@ export default class RaccoonLauncherPrefs extends ExtensionPreferences {
         settings.bind('max-results', spin, 'value', Gio.SettingsBindFlags.DEFAULT);
     }
 }
+
+const DEFAULT_BOX_COLOR = 'rgba(30,30,35,0.98)';
+
+const ColorRow = GObject.registerClass(
+class ColorRow extends Adw.ActionRow {
+    _init(settings, key) {
+        super._init({
+            title: 'Box color',
+            subtitle: 'Background color of the launcher box',
+        });
+        this._settings = settings;
+        this._key = key;
+        this._syncing = false;
+
+        this._button = new Gtk.ColorDialogButton({
+            dialog: new Gtk.ColorDialog({with_alpha: true}),
+            valign: Gtk.Align.CENTER,
+        });
+        this._syncFromSettings();
+        this._button.connect('notify::rgba', () => {
+            if (this._syncing)
+                return;
+            this._settings.set_string(this._key, this._button.get_rgba().to_string());
+        });
+        this.add_suffix(this._button);
+
+        const reset = new Gtk.Button({
+            icon_name: 'edit-clear-symbolic',
+            tooltip_text: 'Reset to default color',
+            valign: Gtk.Align.CENTER,
+        });
+        reset.add_css_class('flat');
+        reset.connect('clicked', () => {
+            this._settings.reset(this._key);
+            this._syncFromSettings();
+        });
+        this.add_suffix(reset);
+        this.activatable_widget = this._button;
+    }
+
+    _syncFromSettings() {
+        this._syncing = true;
+        const rgba = new Gdk.RGBA();
+        if (!rgba.parse(this._settings.get_string(this._key)))
+            rgba.parse(DEFAULT_BOX_COLOR);
+        this._button.set_rgba(rgba);
+        this._syncing = false;
+    }
+});
 
 const ShortcutRow = GObject.registerClass(
 class ShortcutRow extends Adw.ActionRow {

@@ -2,7 +2,7 @@ UUID    = raccoonlauncher@shimafallah.github.io
 EXT_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 SOURCES = metadata.json extension.js prefs.js stylesheet.css lib schemas
 
-.PHONY: schemas install uninstall pack lint nested
+.PHONY: schemas install uninstall pack lint nested test
 
 # Compile the GSettings schema (needed before the extension can load).
 schemas:
@@ -34,6 +34,11 @@ lint:
 	done
 	@echo "OK"
 
-# Launch a nested GNOME Shell for testing without logging out (Wayland).
+# Launch a nested GNOME Shell for manual testing (GNOME 49+ uses --devkit;
+# needs the mutter-devkit viewer installed). For automated checks use 'make test'.
 nested:
-	dbus-run-session -- gnome-shell --nested --wayland
+	dbus-run-session -- gnome-shell --devkit
+
+# Load the extension in a private headless shell and verify open/close work.
+test:
+	./tools/smoketest.sh

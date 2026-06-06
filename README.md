@@ -14,8 +14,10 @@ Built as a GNOME Shell extension (GJS), targeting **GNOME 48–50**
 - **Web search** — prefix shortcuts: `g`, `ddg`, `yt`, `wiki`, `gh`
   (e.g. `g wayland tips`).
 - **System actions** — `lock`, `log out`, `suspend`, `restart`, `power off`.
+- **Customizable** — rebind the shortcut and change the box color from the
+  preferences (also reachable via the gear icon inside the launcher).
 
-Default shortcut: <kbd>Super</kbd>+<kbd>Space</kbd> (configurable in preferences).
+Default shortcut: <kbd>Ctrl</kbd>+<kbd>Space</kbd> (configurable in preferences).
 
 ## Install from source
 
@@ -25,10 +27,13 @@ gnome-extensions enable raccoonlauncher@shimafallah.github.io
 ```
 
 On Wayland (the default on Ubuntu 22.04+), log out and back in so GNOME Shell
-picks up the new extension. To iterate without logging out, run a nested shell:
+picks up the new extension. (`Alt`+`F2` → `r` only works on X11.)
+
+To verify the overlay open/close logic without logging out, run the headless
+self-test:
 
 ```bash
-make nested        # opens GNOME Shell in a window
+make test          # spins up a private headless shell, prints PASS/FAIL
 ```
 
 Watch logs while testing:
@@ -43,8 +48,9 @@ journalctl -f -o cat /usr/bin/gnome-shell
 gnome-extensions prefs raccoonlauncher@shimafallah.github.io
 ```
 
-Toggle individual providers, change the maximum result count, and rebind the
-shortcut.
+Rebind the shortcut, change the box background color, toggle individual
+providers, and set the maximum result count. You can also open preferences from
+the gear icon inside the launcher.
 
 ## Packaging for extensions.gnome.org
 
@@ -61,7 +67,7 @@ metadata.json                 extension metadata + supported shell versions
 extension.js                  enable()/disable(), registers the hotkey
 prefs.js                      GTK4/libadwaita preferences window
 stylesheet.css                overlay styling
-schemas/                      GSettings schema (shortcut + toggles)
+schemas/                      GSettings schema (shortcut, box color, toggles)
 lib/
   overlay.js                  the search overlay UI
   search.js                   dispatcher: queries providers, ranks results

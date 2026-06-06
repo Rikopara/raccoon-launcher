@@ -13,7 +13,10 @@ export default class RaccoonLauncherExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
         this._engine = new SearchEngine(this._settings);
-        this._overlay = new LauncherOverlay(this._engine);
+        this._overlay = new LauncherOverlay(
+            this._engine,
+            this._settings,
+            () => this.openPreferences());
 
         Main.wm.addKeybinding(
             TOGGLE_KEY,

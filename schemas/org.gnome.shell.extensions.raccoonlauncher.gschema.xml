@@ -4,9 +4,16 @@
           path="/org/gnome/shell/extensions/raccoonlauncher/">
 
     <key name="toggle-launcher" type="as">
-      <default><![CDATA[['<Super>space']]]></default>
+      <default><![CDATA[['<Control>space']]]></default>
       <summary>Toggle the launcher</summary>
       <description>Keyboard shortcut that shows or hides the launcher overlay.</description>
+    </key>
+
+    <key name="box-color" type="s">
+      <default>'rgba(30,30,35,0.98)'</default>
+      <summary>Launcher box background color</summary>
+      <description>CSS color used for the launcher box background. Accepts any
+      CSS color string, e.g. '#1e1e23' or 'rgba(30,30,35,0.98)'.</description>
     </key>
 
     <key name="enable-apps" type="b">
