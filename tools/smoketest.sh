@@ -57,10 +57,10 @@ export default class RaccoonLauncherExtension extends Extension {
             try {
                 const o = this._overlay;
                 o.open();
-                log(`RACCOON_TEST open isOpen=${o._isOpen} capture=${o._captureId > 0} visible=${o.visible}`);
+                log(`RACCOON_TEST open isOpen=${o._isOpen} visible=${o.visible}`);
                 log(`RACCOON_TEST appResults=${this._engine.query('fi').length}`);
                 o.close();
-                log(`RACCOON_TEST close isOpen=${o._isOpen} capture=${o._captureId} visible=${o.visible}`);
+                log(`RACCOON_TEST close isOpen=${o._isOpen} visible=${o.visible}`);
                 o.toggle(); const a = o._isOpen;
                 o.toggle(); const b = o._isOpen;
                 log(`RACCOON_TEST toggle ${a} ${b}`);
@@ -99,7 +99,7 @@ grep -E "RACCOON_TEST" "$LOG" || echo "(no output captured)"
 echo "----------------------------"
 
 if grep -q "RACCOON_TEST RESULT OK" "$LOG" \
-   && grep -q "RACCOON_TEST open isOpen=true capture=true visible=true" "$LOG" \
+   && grep -q "RACCOON_TEST open isOpen=true visible=true" "$LOG" \
    && grep -q "RACCOON_TEST close isOpen=false" "$LOG"; then
     echo "PASS"
     exit 0

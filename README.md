@@ -79,6 +79,12 @@ lib/
     system.js                 system actions
 ```
 
+## Support
+
+If you find Raccoon Launcher useful, you can send a tip via crypto:
+
+**USDT (TRC20 / Tron):** `TZJ9UMtESX9JPc4KK632r6tk16MZTu9dZQ`
+
 ## License
 
 GPL-2.0-or-later

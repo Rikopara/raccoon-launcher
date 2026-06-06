@@ -4,25 +4,7 @@ import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 
-// The ExtensionPreferences base module path varies across GNOME builds; try
-// the standard path first, then the js/extensions/ fallback.
-const PREFS_MODULE_PATHS = [
-    'resource:///org/gnome/Shell/Extensions/prefs.js',
-    'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js',
-];
-
-let ExtensionPreferences;
-let lastError;
-for (const path of PREFS_MODULE_PATHS) {
-    try {
-        ({ExtensionPreferences} = await import(path));
-        break;
-    } catch (e) {
-        lastError = e;
-    }
-}
-if (!ExtensionPreferences)
-    throw lastError;
+import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class RaccoonLauncherPrefs extends ExtensionPreferences {
     fillPreferencesWindow(window) {
