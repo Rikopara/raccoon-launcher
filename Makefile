@@ -1,4 +1,4 @@
-UUID    = raccoonlauncher@shimafallah.github.io
+UUID    = raccoonlauncher-ru@shimafallah.github.io
 EXT_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 SOURCES = metadata.json extension.js prefs.js stylesheet.css lib schemas
 
